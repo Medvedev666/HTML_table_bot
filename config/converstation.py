@@ -1,4 +1,4 @@
-from telegram import Update
+from telegram import Update, ReplyKeyboardRemove
 from telegram.ext import (
     ContextTypes, 
     ConversationHandler,
@@ -6,8 +6,9 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 
 
-from config.functions import keyboard
-from config.config import logger
+from .functions import keyboard, make_buttons
+from .config import logger
+from .list import main_menu
 
 import subprocess
 
@@ -25,7 +26,11 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Cancels and ends the conversation."""
 
     await context.bot.send_message(chat_id=update.effective_chat.id, 
-                                text="Вы вышли из формы создания бота")
+                                text="Вы вышли из формы создания HTML таблицы",
+                                reply_markup=ReplyKeyboardRemove())
+    await context.bot.send_message(chat_id=update.effective_chat.id, 
+                                text="Ознакомся с инструкцией и пользуйся 👍",
+                                reply_markup=await make_buttons(main_menu))
     return ConversationHandler.END
 
 
